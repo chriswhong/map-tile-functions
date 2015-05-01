@@ -1,12 +1,15 @@
 //Bounds from Tile 
 //Given a zoom, x, and y for a map tile, returns the tile's bounding box in WGS84
 //Javascript implementation of code found at http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
+//Reminder: this code puts the origin at the top left, not the bottom left
+
 
 //input object is the z/x/y notation for a map tile
+
 var i = {
-  x:0,
-  y:0,
-  z:0
+  x:1,
+  y:1,
+  z:1
 }
 
 
@@ -43,17 +46,20 @@ function metersToLatLng(coord) {
   return [lng,lat]
 }
 
+
 function tileBounds(z,x,y) {
-  var mins = pixelsToMeters( z, x*256, y*256 )
-  var maxs = pixelsToMeters( z, (x+1)*256, (y+1)*256 )
-        
+  var mins = pixelsToMeters( z, x*256, (y+1)*256 )
+  var maxs = pixelsToMeters( z, (x+1)*256, y*256 )
+      
   return [mins,maxs];
 }
+
 
 function pixelsToMeters(z,x,y) {
   var res = (2 * Math.PI * 6378137 / 256) / (Math.pow(2,z));
   mx = x * res - (2 * Math.PI * 6378137 / 2.0);
   my = y * res - (2 * Math.PI * 6378137 / 2.0);
+  my = -my;
   return [mx, my];
 }
 
